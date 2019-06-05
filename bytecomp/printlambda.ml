@@ -336,7 +336,8 @@ let primitive ppf = function
   | Pbswap16 -> fprintf ppf "bswap16"
   | Pbbswap(bi) -> print_boxed_integer "bswap" ppf bi
   | Pint_as_pointer -> fprintf ppf "int_as_pointer"
-  | Patomic_load -> fprintf ppf "atomic_load"
+  (* TODO Anmol : Should the text be changed ? *)
+  | Patomic_load _ -> fprintf ppf "atomic_load"
   | Patomic_exchange -> fprintf ppf "atomic_exchange"
   | Patomic_cas -> fprintf ppf "atomic_cas"
   | Patomic_fetch_add -> fprintf ppf "atomic_fetch_add"
@@ -443,7 +444,8 @@ let name_of_primitive = function
   | Pbswap16 -> "Pbswap16"
   | Pbbswap _ -> "Pbbswap"
   | Pint_as_pointer -> "Pint_as_pointer"
-  | Patomic_load -> "Patomic_load"
+  (* TODO Anmol : Change the text here ? *)
+  | Patomic_load _ -> "Patomic_load"
   | Patomic_exchange -> "Patomic_exchange"
   | Patomic_cas -> "Patomic_cas"
   | Patomic_fetch_add -> "Patomic_fetch_add"
