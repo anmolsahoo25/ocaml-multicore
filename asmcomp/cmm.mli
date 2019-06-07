@@ -107,7 +107,7 @@ and operation =
     Capply of machtype
   | Cextcall of string * machtype * bool * label option
   | Cload of memory_chunk * Asttypes.mutable_flag
-  | Cloadmut
+  | Cloadmut of {is_atomic : bool}
     (* Mutable loads = Cload (Word_val, Mutable. It is a separate op since we
      * need the address of the object for read barrier. *)
   | Calloc

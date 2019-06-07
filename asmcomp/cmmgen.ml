@@ -587,7 +587,7 @@ let field_address ptr n dbg =
   else Cop(Cadda, [ptr; Cconst_int(n * size_addr)], dbg)
 
 let get_mut_field ptr n dbg =
-  Cop (Cloadmut, [ptr; n], dbg)
+  Cop (Cloadmut {is_atomic = true}, [ptr; n], dbg)
 
 let get_field env ptr n dbg =
   let mut =
@@ -689,7 +689,7 @@ let array_indexing ?typ log2size ptr ofs dbg =
                     Cconst_int((-1) lsl (log2size - 1))], dbg)
 
 let addr_array_ref arr ofs dbg =
-  Cop(Cloadmut, [arr; untag_int ofs dbg], dbg)
+  Cop(Cloadmut {is_atomic = true}, [arr; untag_int ofs dbg], dbg)
 let int_array_ref arr ofs dbg =
   Cop(Cload (Word_int, Mutable),
     [array_indexing log2_size_addr arr ofs dbg], dbg)
@@ -742,7 +742,7 @@ let lookup_tag obj tag dbg =
 
 let lookup_label obj lab dbg =
   bind "lab" lab (fun lab ->
-    let table = Cop (Cloadmut, [obj; Cconst_int 0], dbg) in
+    let table = Cop (Cloadmut {is_atomic = true}, [obj; Cconst_int 0], dbg) in
                      (* Should this be Cloadmut? *)
     addr_array_ref table lab dbg)
 

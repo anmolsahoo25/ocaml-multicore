@@ -136,7 +136,7 @@ and operation =
     (** If specified, the given label will be placed immediately after the
         call (at the same place as any frame descriptor would reference). *)
   | Cload of memory_chunk * Asttypes.mutable_flag
-  | Cloadmut
+  | Cloadmut of {is_atomic : bool}
   | Calloc
   | Cstore of memory_chunk * Lambda.initialization_or_assignment
   | Caddi | Csubi | Cmuli | Cmulhi | Cdivi | Cmodi
