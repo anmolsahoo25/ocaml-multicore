@@ -42,7 +42,7 @@ and instruction_desc =
   | Lpushtrap
   | Lpoptrap
   | Lraise of Lambda.raise_kind
-  | Lpoll
+  | Lpoll of { mutable emit : bool }
 
 let has_fallthrough = function
   | Lreturn | Lbranch _ | Lswitch _ | Lraise _
@@ -309,8 +309,8 @@ let rec linear i n =
         (linear handler (add_branch lbl_join n2))
   | Iraise k ->
       copy_instr (Lraise k) i (discard_dead_code n)
-  | Ipoll ->
-      copy_instr (Lpoll) i (discard_dead_code n)
+  | Ipoll {emit} ->
+      copy_instr (Lpoll {emit}) i (discard_dead_code n)
 
 let fundecl f =
   { fun_name = f.Mach.fun_name;

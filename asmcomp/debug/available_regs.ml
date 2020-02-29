@@ -338,7 +338,7 @@ let rec available_regs (instr : M.instruction)
         let avail_before = ok avail_before in
         augment_availability_at_raise avail_before;
         None, unreachable
-      | Ipoll ->
+      | Ipoll _ ->
           None, (ok avail_before)
   in
   instr.available_across <- avail_across;

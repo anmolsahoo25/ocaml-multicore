@@ -257,7 +257,7 @@ method private kill_loads n =
 method private cse n i =
   match i.desc with
   | Iend | Ireturn | Iop(Itailcall_ind _) | Iop(Itailcall_imm _)
-  | Iexit _ | Iraise _ | Ipoll ->
+  | Iexit _ | Iraise _ | Ipoll _ ->
       i
   | Iop (Imove | Ispill | Ireload) ->
       (* For moves, we associate the same value number to the result reg

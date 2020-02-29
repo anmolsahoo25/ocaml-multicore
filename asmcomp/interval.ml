@@ -168,7 +168,7 @@ let build_intervals fd =
         walk_instruction i.next
     | Iraise _ ->
         walk_instruction i.next
-    | Ipoll ->
+    | Ipoll _ ->
         walk_instruction i.next
     end in
   walk_instruction fd.fun_body;

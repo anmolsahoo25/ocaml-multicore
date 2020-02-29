@@ -198,7 +198,7 @@ let rec rename i sub =
   | Iraise k ->
       (instr_cons_debug (Iraise k) (subst_regs i.arg sub) [||] i.dbg i.next,
        None)
-  | Ipoll ->
+  | Ipoll _ ->
       (i, sub)
 
 (* Second pass: replace registers by their final representatives *)

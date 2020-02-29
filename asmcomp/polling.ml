@@ -19,17 +19,6 @@ let e = lmax/k
 let _is_addr_live i = 
   not (Reg.Set.is_empty (Reg.Set.filter (fun f -> f.typ = Cmm.Addr) i))
 
-let _insert_poll_instr instr = 
-    { desc = Ipoll;
-      next = instr;
-      arg = instr.arg;
-      res = [||];
-      dbg = Debuginfo.none;
-      live = instr.live;
-      available_before = instr.available_before;
-      available_across = instr.available_across;
-    }
-
 let insert_poll_aux _delta instr = instr
 (*
     if (is_addr_live instr.live) then begin

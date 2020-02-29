@@ -843,23 +843,27 @@ let emit_instr fallthrough i =
   | Lop(Ispecific(Ifloatsqrtf addr)) ->
       I.sqrtsd (addressing addr REAL8 i 0) (res i 0)
   | Lop (Iname_for_debugger _) -> ()
-  | Lpoll -> 
-      I.cmp (domain_field Domainstate.Domain_young_limit) r15;
-      let gc_call_label = new_label () in
-      let label_after_gc = new_label () in
-      let lbl_frame =
-        record_frame_label ?label:None i.live false Debuginfo.none
-      in
-      I.jb (label gc_call_label);
-      call_gc_sites :=
-        { gc_size = 0; 
-          gc_lbl = gc_call_label;
-          gc_return_lbl = label_after_gc;
-          gc_frame = lbl_frame;
-          gc_spacetime = None ;
-          is_poll = true } :: !call_gc_sites;
-      def_label label_after_gc;
-      ()
+  | Lpoll {emit} -> 
+      if emit then begin
+        I.cmp (domain_field Domainstate.Domain_young_limit) r15;
+        let gc_call_label = new_label () in
+        let label_after_gc = new_label () in
+        let lbl_frame =
+          record_frame_label ?label:None i.live false Debuginfo.none
+        in
+        I.jb (label gc_call_label);
+        call_gc_sites :=
+          { gc_size = 0; 
+            gc_lbl = gc_call_label;
+            gc_return_lbl = label_after_gc;
+            gc_frame = lbl_frame;
+            gc_spacetime = None ;
+            is_poll = true } :: !call_gc_sites;
+        def_label label_after_gc;
+        ()
+      end else begin
+        ()
+      end
   | Lreloadretaddr ->
       ()
   | Lreturn ->

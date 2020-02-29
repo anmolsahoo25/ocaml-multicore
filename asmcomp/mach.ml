@@ -85,7 +85,7 @@ and instruction_desc =
   | Iexit of int
   | Itrywith of instruction * instruction
   | Iraise of Lambda.raise_kind
-  | Ipoll
+  | Ipoll of {mutable emit : bool}
 
 type spacetime_part_of_shape =
   | Direct_call_point of { callee : string; }
@@ -198,7 +198,7 @@ let spacetime_node_hole_pointer_is_live_before insn =
     | Iname_for_debugger _ -> false
     end
   | Iend | Ireturn | Iifthenelse _ | Iswitch _ | Iloop _ | Icatch _
-  | Iexit _ | Itrywith _ | Iraise _ | Ipoll -> false
+  | Iexit _ | Itrywith _ | Iraise _ | Ipoll _ -> false
 
 let operation_can_raise op =
   match op with

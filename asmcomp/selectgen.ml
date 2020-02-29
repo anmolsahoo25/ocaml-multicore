@@ -861,7 +861,7 @@ method emit_expr (env:environment) exp =
         [||] [||];
       r
   | Cpoll exp ->
-      let _ = self#insert (Ipoll) [||] [||] in ();
+      let _ = self#insert (Ipoll {emit=false}) [||] [||] in ();
       self#emit_expr env exp
 
 method private emit_sequence (env:environment) exp =
