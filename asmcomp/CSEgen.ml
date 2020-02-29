@@ -237,7 +237,6 @@ method class_of_operation op =
   | Ifloatofint | Iintoffloat -> Op_pure
   | Ispecific _ -> Op_other
   | Iname_for_debugger _ -> Op_pure
-  | Ipoll -> Op_checkbound
 
 (* Operations that are so cheap that it isn't worth factoring them. *)
 
@@ -258,7 +257,7 @@ method private kill_loads n =
 method private cse n i =
   match i.desc with
   | Iend | Ireturn | Iop(Itailcall_ind _) | Iop(Itailcall_imm _)
-  | Iexit _ | Iraise _ ->
+  | Iexit _ | Iraise _ | Ipoll ->
       i
   | Iop (Imove | Ispill | Ireload) ->
       (* For moves, we associate the same value number to the result reg

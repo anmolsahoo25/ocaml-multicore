@@ -303,7 +303,7 @@ method is_simple_expr = function
       | Ccmpf _ | Ccheckbound -> List.for_all self#is_simple_expr args
       end
   | Cassign _ | Cifthenelse _ | Cswitch _ | Cloop _ | Ccatch _ | Cexit _
-  | Ctrywith _ -> false
+  | Ctrywith _ | Cpoll _ -> false
 
 (* Analyses the effects and coeffects of an expression.  This is used across
    a whole list of expressions with a view to determining which expressions
@@ -347,7 +347,7 @@ method effects_of exp =
         EC.none
     in
     EC.join from_op (EC.join_list_map args self#effects_of)
-  | Cassign _ | Cswitch _ | Cloop _ | Ccatch _ | Cexit _ | Ctrywith _ ->
+  | Cassign _ | Cswitch _ | Cloop _ | Ccatch _ | Cexit _ | Ctrywith _ | Cpoll _ ->
     EC.arbitrary
 
 (* Says whether an integer constant is a suitable immediate argument *)
@@ -860,6 +860,9 @@ method emit_expr (env:environment) exp =
                              (s2#extract)))
         [||] [||];
       r
+  | Cpoll exp ->
+      let _ = self#insert (Ipoll) [||] [||] in ();
+      self#emit_expr env exp
 
 method private emit_sequence (env:environment) exp =
   let s = {< instr_seq = dummy_instr >} in

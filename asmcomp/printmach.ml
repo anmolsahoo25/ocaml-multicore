@@ -168,7 +168,6 @@ let operation op arg ppf res =
       reg arg.(0)
   | Ispecific op ->
       Arch.print_specific_operation reg op ppf arg
-  | Ipoll -> fprintf ppf "poll"
 
 let rec instr ppf i =
   if !print_live then begin
@@ -232,6 +231,7 @@ let rec instr ppf i =
              instr body instr handler
   | Iraise k ->
       fprintf ppf "%s %a" (Lambda.raise_kind k) reg i.arg.(0)
+  | Ipoll -> fprintf ppf "poll"
   end;
   if not (Debuginfo.is_none i.dbg) then
     fprintf ppf "%s" (Debuginfo.to_string i.dbg);

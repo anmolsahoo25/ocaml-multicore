@@ -62,7 +62,6 @@ type operation =
   | Ispecific of Arch.specific_operation
   | Iname_for_debugger of { ident : Ident.t; which_parameter : int option;
       provenance : unit option; is_assignment : bool; }
-  | Ipoll
 
 type instruction =
   { desc: instruction_desc;
@@ -86,6 +85,7 @@ and instruction_desc =
   | Iexit of int
   | Itrywith of instruction * instruction
   | Iraise of Lambda.raise_kind
+  | Ipoll
 
 type spacetime_part_of_shape =
   | Direct_call_point of { callee : string; }
@@ -195,10 +195,10 @@ let spacetime_node_hole_pointer_is_live_before insn =
     | Iconst_symbol _ | Istackoffset _ | Iload _ | Iloadmut | Istore _
     | Inegf | Iabsf | Iaddf | Isubf | Imulf | Idivf
     | Ifloatofint | Iintoffloat
-    | Iname_for_debugger _ | Ipoll -> false
+    | Iname_for_debugger _ -> false
     end
   | Iend | Ireturn | Iifthenelse _ | Iswitch _ | Iloop _ | Icatch _
-  | Iexit _ | Itrywith _ | Iraise _ -> false
+  | Iexit _ | Itrywith _ | Iraise _ | Ipoll -> false
 
 let operation_can_raise op =
   match op with

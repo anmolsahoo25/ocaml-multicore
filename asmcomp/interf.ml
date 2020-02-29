@@ -133,7 +133,8 @@ let build_graph fundecl =
     | Itrywith(body, handler) ->
         add_interf_set Proc.destroyed_at_raise handler.live;
         interf body; interf handler; interf i.next
-    | Iraise _ -> () in
+    | Iraise _ -> () 
+    | Ipoll -> () in
 
   (* Add a preference from one reg to another.
      Do not add anything if the two registers conflict,
@@ -215,6 +216,7 @@ let build_graph fundecl =
     | Itrywith(body, handler) ->
         prefer weight body; prefer weight handler; prefer weight i.next
     | Iraise _ -> ()
+    | Ipoll -> ()
   in
 
   interf fundecl.fun_body; prefer 8 fundecl.fun_body

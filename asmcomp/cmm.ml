@@ -174,6 +174,7 @@ type expression =
   | Ccatch of rec_flag * (int * Ident.t list * expression) list * expression
   | Cexit of int * expression list
   | Ctrywith of expression * Ident.t * expression
+  | Cpoll of expression
 
 type fundecl =
   { fun_name: string;

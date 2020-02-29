@@ -39,6 +39,7 @@ and instruction_desc =
   | Lpushtrap
   | Lpoptrap
   | Lraise of Lambda.raise_kind
+  | Lpoll
 
 val has_fallthrough :  instruction_desc -> bool
 val end_instr: instruction

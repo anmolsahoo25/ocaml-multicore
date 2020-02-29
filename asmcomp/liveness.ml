@@ -155,6 +155,8 @@ let rec live i finally =
   | Iraise _ ->
       i.live <- !live_at_raise;
       Reg.add_set_array !live_at_raise arg
+  | Ipoll ->
+      Reg.Set.empty
 
 let reset () =
   live_at_raise := Reg.Set.empty;

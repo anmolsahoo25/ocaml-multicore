@@ -79,7 +79,6 @@ type operation =
         (b) If [is_assignment] is [true], any information about other [Reg.t]s
             that have been previously deemed to hold the value of that
             identifier is forgotten. *)
-  | Ipoll
 
 type instruction =
   { desc: instruction_desc;
@@ -103,6 +102,7 @@ and instruction_desc =
   | Iexit of int
   | Itrywith of instruction * instruction
   | Iraise of Lambda.raise_kind
+  | Ipoll
 
 type spacetime_part_of_shape =
   | Direct_call_point of { callee : string; (* the symbol *) }

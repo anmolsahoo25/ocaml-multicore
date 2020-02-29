@@ -9,17 +9,18 @@
 (**************************************************************************)
 open Mach
 open Reg
+open Cmm
 
 (* constants *)
 let lmax = 50
 let k = 10
 let e = lmax/k
 
-let is_addr_live i = 
+let _is_addr_live i = 
   not (Reg.Set.is_empty (Reg.Set.filter (fun f -> f.typ = Cmm.Addr) i))
 
-let insert_poll_instr instr = 
-    { desc = Iop (Ipoll);
+let _insert_poll_instr instr = 
+    { desc = Ipoll;
       next = instr;
       arg = instr.arg;
       res = [||];
@@ -29,7 +30,8 @@ let insert_poll_instr instr =
       available_across = instr.available_across;
     }
 
-let rec insert_poll_aux delta instr =
+let insert_poll_aux _delta instr = instr
+(*
     if (is_addr_live instr.live) then begin
         { instr with next = (insert_poll_aux delta instr.next) }
     end else begin
@@ -119,11 +121,49 @@ let rec insert_poll_aux delta instr =
         (* pass through - temp until all instructions handled *)
         | _ -> { instr with next = (insert_poll_aux delta instr.next) }
     end
+*)
 
 let insert_poll fun_body =
     insert_poll_aux (lmax-e) fun_body
 
-let fundecl f =
+let rec add_poll = function
+  | Cconst_int _
+  | Cconst_natint _
+  | Cconst_float _
+  | Cconst_symbol _
+  | Cconst_pointer _
+  | Cconst_natpointer _
+  | Cblockheader _
+  | Cvar _ as c -> c
+  | Clet (id, e1, e2) ->
+      Cpoll (Clet (id, add_poll e1, add_poll e2))
+  | Cassign (id, e) ->
+      Cpoll (Cassign (id, add_poll e))
+  | Ctuple el ->
+      Cpoll (Ctuple (List.map add_poll el))
+  | Cop (op, el, dbg) ->
+      Cpoll (Cop (op , List.map add_poll el, dbg))
+  | Csequence (e1, e2) ->
+      Cpoll (Csequence (add_poll e1, add_poll e2))
+  | Cifthenelse (e1, e2, e3) ->
+      Cpoll (Cifthenelse (add_poll e1, add_poll e2, add_poll e3))
+  | Cswitch (e, i, el, dbg) ->
+      Cpoll (Cswitch (add_poll e, i, Array.map add_poll el, dbg))
+  | Cloop e ->
+      Cpoll (Cloop (add_poll e))
+  | Ccatch (r , el, e) ->
+      Cpoll (Ccatch (r, List.map (fun (i,idl,exp) -> (i,idl, add_poll exp)) el, e))
+  | Cexit (i, el) -> 
+      Cpoll (Cexit (i, List.map add_poll el))
+  | Ctrywith (e1, id, e2) ->
+      Cpoll (Ctrywith (add_poll e1, id, add_poll e2))
+  | Cpoll _ ->
+      assert false
+
+let cmm_fundecl f =
+  { f with fun_body = add_poll f.fun_body }
+
+let mach_fundecl (f:Mach.fundecl) =
     let new_body =
         insert_poll f.fun_body
     in

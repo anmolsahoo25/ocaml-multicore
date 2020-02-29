@@ -14,4 +14,5 @@
 (**************************************************************************)
 
 (* Insertion of poll points according to balanced polling *)
-val fundecl : Mach.fundecl -> Mach.fundecl
+val cmm_fundecl : Cmm.fundecl -> Cmm.fundecl
+val mach_fundecl : Mach.fundecl -> Mach.fundecl

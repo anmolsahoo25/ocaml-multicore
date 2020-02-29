@@ -168,6 +168,8 @@ let build_intervals fd =
         walk_instruction i.next
     | Iraise _ ->
         walk_instruction i.next
+    | Ipoll ->
+        walk_instruction i.next
     end in
   walk_instruction fd.fun_body;
   (* Generate the interval and fixed interval lists *)

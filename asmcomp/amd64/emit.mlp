@@ -843,7 +843,7 @@ let emit_instr fallthrough i =
   | Lop(Ispecific(Ifloatsqrtf addr)) ->
       I.sqrtsd (addressing addr REAL8 i 0) (res i 0)
   | Lop (Iname_for_debugger _) -> ()
-  | Lop (Ipoll) -> 
+  | Lpoll -> 
       I.cmp (domain_field Domainstate.Domain_young_limit) r15;
       let gc_call_label = new_label () in
       let label_after_gc = new_label () in

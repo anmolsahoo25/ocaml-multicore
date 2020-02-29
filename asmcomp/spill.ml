@@ -274,6 +274,8 @@ let rec reload i before =
        finally)
   | Iraise _ ->
       (add_reloads (Reg.inter_set_array before i.arg) i, Reg.Set.empty)
+  | Ipoll ->
+      (i, before)
 
 (* Second pass: add spill instructions based on what we've decided to reload.
    That is, any register that may be reloaded in the future must be spilled
@@ -449,6 +451,8 @@ let rec spill i finally =
        before_body)
   | Iraise _ ->
       (i, !spill_at_raise)
+  | Ipoll ->
+      (i, finally)
 
 (* Entry point *)
 
